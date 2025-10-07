@@ -1,15 +1,21 @@
 {
   "name": "workshop2026_back",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "API backend pour Workshop 2025-2026",
+  "main": "api.js",
+  "type": "module",
   "scripts": {
-    "build": "echo 'Ajoutez un script.'",
-    "dev": "echo 'Ajoutez un script.'",
-    "web": "index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api.js",
+    "dev": "nodemon api.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Rémi",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }
