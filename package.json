@@ -2,20 +2,21 @@
   "name": "workshop2026_back",
   "version": "1.0.0",
   "description": "API backend pour Workshop 2025-2026",
-  "main": "api.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node api.js",
-    "dev": "nodemon api.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "Rémi",
+  "author": "WorkShop 2025-2026",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
     "cors": "^2.8.5",
     "mysql2": "^3.3.3",
     "swagger-ui-express": "4.6.3",
-    "swagger-jsdoc": "^6.2.8"
+    "swagger-jsdoc": "^6.2.8",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
