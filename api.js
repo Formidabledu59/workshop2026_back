@@ -15,8 +15,8 @@ app.use(express.json());
 ///////////////////////////
 const dbConfig = {
     host: 'localhost',
-    user: 'root',
-    password: '',       // change selon ta config
+    user: 'root',       // remplace par ton utilisateur MySQL local
+    password: '',       // remplace par ton mot de passe local
     database: 'workshop2526_bdd'
 };
 
@@ -37,80 +37,15 @@ const swaggerOptions = {
         info: {
             title: 'Workshop API',
             version: '1.0.0',
-            description: 'API CRUD pour gérer les apps, questions et scores',
+            description: 'API CRUD pour gérer les questions et les scores',
         },
         servers: [{ url: `http://localhost:${PORT}` }],
     },
-    apis: ['./api.js'], // annotations Swagger dans ce fichier
+    apis: ['./api.js'], // les annotations Swagger sont dans ce fichier
 };
 
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
-///////////////////////////
-// 🔹 CRUD APPS
-///////////////////////////
-
-/**
- * @swagger
- * /apps:
- *   get:
- *     summary: Récupérer toutes les applications
- *     responses:
- *       200:
- *         description: Liste des applications
- */
-app.get('/apps', async (req, res) => {
-    try {
-        const apps = await query('SELECT * FROM apps');
-        res.json(apps);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-/**
- * @swagger
- * /apps/{id}:
- *   get:
- *     summary: Récupérer une application par ID
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Application trouvée
- *       404:
- *         description: Application non trouvée
- */
-app.get('/apps/:id', async (req, res) => {
-    try {
-        const rows = await query('SELECT * FROM apps WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) return res.status(404).json({ message: 'App not found' });
-
-        let app = rows[0];
-
-        // Si c'est un quiz, on ajoute les questions
-        if (app.type === 'quiz') {
-            const questions = await query('SELECT * FROM questions WHERE theme_id = ?', [app.theme_id]);
-            app.questions = questions.map(q => ({
-                id: q.id,
-                text: q.text,
-                type: q.type,
-                choices: JSON.parse(q.choices),
-                answer: q.answer,
-                difficulty: q.difficulty
-            }));
-        }
-
-        res.json(app);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
 ///////////////////////////
 // 🔹 CRUD QUESTIONS
@@ -132,6 +67,23 @@ app.get('/questions', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /questions/{id}:
+ *   get:
+ *     summary: Récupérer une question par ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Question trouvée
+ *       404:
+ *         description: Question non trouvée
+ */
 app.get('/questions/:id', async (req, res) => {
     try {
         const rows = await query('SELECT * FROM questions WHERE id = ?', [req.params.id]);
@@ -140,6 +92,38 @@ app.get('/questions/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /questions:
+ *   post:
+ *     summary: Ajouter une nouvelle question
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               theme_id:
+ *                 type: integer
+ *               text:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               choices:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               answer:
+ *                 type: string
+ *               difficulty:
+ *                 type: integer
+ *               active:
+ *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Question ajoutée
+ */
 app.post('/questions', async (req, res) => {
     try {
         const { theme_id, text, type, choices, answer, difficulty, active } = req.body;
@@ -152,11 +136,34 @@ app.post('/questions', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /questions/{id}:
+ *   put:
+ *     summary: Modifier une question existante
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Question mise à jour
+ */
 app.put('/questions/:id', async (req, res) => {
     try {
         const { theme_id, text, type, choices, answer, difficulty, active } = req.body;
         const result = await query(
-            `UPDATE questions SET theme_id=?, text=?, type=?, choices=?, answer=?, difficulty=?, active=? WHERE id=?`,
+            `UPDATE questions
+             SET theme_id=?, text=?, type=?, choices=?, answer=?, difficulty=?, active=?
+             WHERE id=?`,
             [theme_id, text, type, JSON.stringify(choices), answer, difficulty || null, active ?? 1, req.params.id]
         );
         if (result.affectedRows === 0) return res.status(404).json({ message: 'Question not found' });
@@ -164,6 +171,21 @@ app.put('/questions/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /questions/{id}:
+ *   delete:
+ *     summary: Supprimer une question
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Question supprimée
+ */
 app.delete('/questions/:id', async (req, res) => {
     try {
         const result = await query('DELETE FROM questions WHERE id=?', [req.params.id]);
@@ -176,6 +198,15 @@ app.delete('/questions/:id', async (req, res) => {
 // 🔹 CRUD SCORES
 ///////////////////////////
 
+/**
+ * @swagger
+ * /scores:
+ *   get:
+ *     summary: Récupérer tous les scores
+ *     responses:
+ *       200:
+ *         description: Liste des scores
+ */
 app.get('/scores', async (req, res) => {
     try {
         const rows = await query('SELECT * FROM scores');
@@ -183,6 +214,21 @@ app.get('/scores', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /scores/{id}:
+ *   get:
+ *     summary: Récupérer un score par ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Score trouvé
+ */
 app.get('/scores/:id', async (req, res) => {
     try {
         const rows = await query('SELECT * FROM scores WHERE id = ?', [req.params.id]);
@@ -191,6 +237,30 @@ app.get('/scores/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /scores:
+ *   post:
+ *     summary: Ajouter un nouveau score
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_email:
+ *                 type: string
+ *               theme_id:
+ *                 type: integer
+ *               score:
+ *                 type: integer
+ *               total:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Score ajouté
+ */
 app.post('/scores', async (req, res) => {
     try {
         const { user_email, theme_id, score, total } = req.body;
@@ -202,6 +272,12 @@ app.post('/scores', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /scores/{id}:
+ *   put:
+ *     summary: Modifier un score
+ */
 app.put('/scores/:id', async (req, res) => {
     try {
         const { user_email, theme_id, score, total } = req.body;
@@ -214,6 +290,12 @@ app.put('/scores/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+/**
+ * @swagger
+ * /scores/{id}:
+ *   delete:
+ *     summary: Supprimer un score
+ */
 app.delete('/scores/:id', async (req, res) => {
     try {
         const result = await query('DELETE FROM scores WHERE id=?', [req.params.id]);
