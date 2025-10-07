@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "echo 'Ajoutez un script.'",
+    "dev": "echo 'Ajoutez un script.'",
     "web": "index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
