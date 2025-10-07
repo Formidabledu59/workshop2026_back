@@ -31,7 +31,7 @@ jobs:
           key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
           port: 22
           script: |
-            cd ~/workshop2026_back
+            cd workshop2026_back
             git pull origin main
             npm install
             npm run dev
