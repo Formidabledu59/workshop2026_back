@@ -1,0 +1,13 @@
+{
+  "name": "workshop2026_back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "web" : "index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
