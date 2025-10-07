@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Présentation des Profils</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 80%;
+      max-width: 1000px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .profile-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 220px;
+      margin: 15px;
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.3s;
+    }
+    .profile-card:hover {
+      transform: scale(1.05);
+    }
+    .profile-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+    .profile-card h3 {
+      margin: 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .profile-card p {
+      font-size: 14px;
+      color: #666;
+    }
+    .github-icon {
+      width: 30px;
+      height: 30px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .github-icon:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="profile-card">
+      <img src="https://avatars.githubusercontent.com/u/130578160?s=400&u=51adfedac520b6bd6ed51956f68b0b5b49796fd4&v=4" alt="Profile 1">
+      <h3>Ayoub FATHALLAH</h3>
+      <p>Développeur Fullstack</p>
+      <a href="https://github.com/Formidabledu59" target="_blank">
+        <img class="github-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">
+      </a>
+    </div>
+
+    <div class="profile-card">
+      <img src="https://avatars.githubusercontent.com/u/59928704?v=4" alt="Profile 2">
+      <h3>Remi DESCAMPS</h3>
+      <p>Développeur IA</p>
+      <a href="https://github.com/mariedubois" target="_blank">
+        <img class="github-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">
+      </a>
+    </div>
+
+    <div class="profile-card">
+      <img src="https://avatars.githubusercontent.com/u/105285931?v=4" alt="Profile 3">
+      <h3>Théo DANCOISNE</h3>
+      <p>Développeur Fullstack</p>
+      <a href="https://github.com/Theo-Dancoisne" target="_blank">
+        <img class="github-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">
+      </a>
+    </div>
+
+    <div class="profile-card">
+      <img src="https://avatars.githubusercontent.com/u/97982297?v=4" alt="Profile 4">
+      <h3>Julien MERIEL</h3>
+      <p>ASRBD</p>
+      <a href="https://github.com/NoobToSayajin" target="_blank">
+        <img class="github-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript simple pour ajouter un effet de survol dynamique sur les cartes
+    const profileCards = document.querySelectorAll('.profile-card');
+
+    profileCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'scale(1.05)';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'scale(1)';
+      });
+    });
+  </script>
+
+</body>
+</html>

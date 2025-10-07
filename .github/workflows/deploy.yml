@@ -1,0 +1,37 @@
+name: Deploy to Alwaysdata
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies & build
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.ALWAYSDATA_HOST }}
+          username: ${{ secrets.ALWAYSDATA_USER }}
+          key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          port: 22
+          script: |
+            cd ~/workshop2026_back
+            git pull origin main
+            npm install
+            npm run dev
