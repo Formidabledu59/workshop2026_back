@@ -16,15 +16,7 @@ router.get('/apps', async (req, res) => {
     try {
         const rows = await query(`
             SELECT
-                iconIcon,
-                iconBackground,
-                color,
-                appBackground,
-                name,
-                type,
-                theme_id,
-                description,
-                background_url
+                id, name, iconIcon, color, type, theme_id, description, iconBackground
             FROM app
             WHERE active = TRUE
             ORDER BY theme_id, id
@@ -60,17 +52,7 @@ router.get('/app/:id', async (req, res) => {
     try {
         // Récupérer l'app
         const appRows = await query(`
-            SELECT
-                id,
-                name,
-                type,
-                theme_id,
-                background_url AS background,
-                description,
-                iconIcon,
-                iconBackground,
-                color,
-                appBackground
+            SELECT id, name, type, theme_id, background_url as background, description
             FROM app
             WHERE id = ? AND active = TRUE
         `, [appId]);
