@@ -32,8 +32,6 @@ jobs:
           port: 22
           script: |
             cd ~/www/workshop2026_back
-            git clean -fd
-            git reset --hard
             git pull origin main
             npm install
             npm run start

@@ -20,7 +20,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API pour Workshop Mobile M1 2025-2026'
     },
-    servers: [{ url: `http://localhost:${PORT}` }]
+    servers: [{ url: `https://workshop2526.alwaysdata.net` }]
   },
   apis: ['./routes/*.js']
 };
