@@ -52,7 +52,7 @@ router.get('/app/:id', async (req, res) => {
     try {
         // Récupérer l'app
         const appRows = await query(`
-            SELECT id, name, type, theme_id, background_url as background, description
+            SELECT id, name, type, theme_id, iconBackground as background, description, color
             FROM app
             WHERE id = ? AND active = TRUE
         `, [appId]);
@@ -63,7 +63,7 @@ router.get('/app/:id', async (req, res) => {
 
         // Récupérer les questions
         const questionRows = await query(`
-            SELECT id, text, type, choices, answer, explanation
+            SELECT id, text, type, choices, answer, explanation, difficulty
             FROM questions
             WHERE app_id = ? AND active = TRUE
             ORDER BY id
@@ -86,7 +86,8 @@ router.get('/app/:id', async (req, res) => {
                 type: q.type,
                 choices,
                 answer: q.answer,
-                explanation: q.explanation
+                explanation: q.explanation,
+                difficulty: q.difficulty
             };
         });
 
@@ -124,13 +125,13 @@ router.get('/stats', async (req, res) => {
         // Stats par app
         const appStats = await query(`
             SELECT
-                a.id, a.name, a.icon,
+                a.id, a.name, a. iconIcon,
                 COUNT(s.id) as play_count,
                 ROUND(AVG(s.score / s.total * 100), 2) as avg_score
             FROM app a
                      LEFT JOIN scores s ON a.id = s.app_id
             WHERE a.active = TRUE
-            GROUP BY a.id, a.name, a.icon
+            GROUP BY a.id, a.name, a. iconIcon
             ORDER BY play_count DESC
         `);
 

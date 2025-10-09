@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
         s.*, 
         ROUND((s.score / s.total) * 100, 0) as percentage,
         a.name as app_name, 
-        a.icon as app_icon
+        a. iconIcon as app_icon
       FROM scores s
       LEFT JOIN app a ON s.app_id = a.id
     `;
